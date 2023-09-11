@@ -20,18 +20,19 @@ describe('Beach forecast functional tests', () => {
         nock('https://api.stormglass.io:443', {
             encodedQueryParams: true,
             reqheaders: {
-              Authorization: (): boolean => true,
+                Authorization: (): boolean => true,
             },
-          })
+        })
             .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
             .get('/v2/weather/point')
             .query({
-              lat: '-33.792726',
-              lng: '151.289824',
-              params: /(.*)/,
-              source: 'noaa',
+                lat: '-33.792726',
+                lng: '151.289824',
+                params: /(.*)/,
+                source: 'noaa',
             })
-            .reply(200, stormGlassWeather3HoursFixture);        const { body, status } = await global.testRequest.get('/forecast');
+            .reply(200, stormGlassWeather3HoursFixture);
+        const { body, status } = await global.testRequest.get('/forecast');
 
         expect(status).toBe(200);
         expect(body).toEqual(apiForecastResponse1BeachFixture);
@@ -40,14 +41,14 @@ describe('Beach forecast functional tests', () => {
         nock('https://api.stormglass.io:443', {
             encodedQueryParams: true,
             reqheaders: {
-              Authorization: (): boolean => true,
+                Authorization: (): boolean => true,
             },
-          })
+        })
             .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
             .get('/v2/weather/point')
-            .replyWithError('Something went wrong')
+            .replyWithError('Something went wrong');
 
-            const { status} = await global.testRequest.get('/forecast');
-            expect(status).toBe(500);
-    })
+        const { status } = await global.testRequest.get('/forecast');
+        expect(status).toBe(500);
+    });
 });
