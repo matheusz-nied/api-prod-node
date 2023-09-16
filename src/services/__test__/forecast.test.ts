@@ -22,6 +22,8 @@ describe('Forecast Service', () => {
                 position: BeachPosition.E,
                 lat: -33.792726,
                 lng: 151.289824,
+                user: 'fake-id'
+
             },
         ];
 
@@ -108,6 +110,7 @@ describe('Forecast Service', () => {
                 position: BeachPosition.E,
                 lat: -33.792726,
                 lng: 151.289824,
+                user: 'fake-id'
             },
         ];
 
