@@ -1,5 +1,5 @@
 {
-  "name": "waldemar-api-node",
+  "name": "api-prod-node",
   "version": "1.0.0",
   "description": "Api com as melhores práticas",
   "main": "index.js",
