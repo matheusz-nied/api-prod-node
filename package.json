@@ -18,6 +18,9 @@
     "style:check": "prettier --check 'src/**/*.ts' 'test/**/*.ts'",
     "style:fix": "prettier --write 'src/**/*.ts' 'test/**/*.ts'"
   },
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "keyword": [
     "nodejs",
     "typescript",
