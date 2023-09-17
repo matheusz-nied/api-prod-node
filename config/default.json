@@ -4,15 +4,15 @@
       "database": {
         "mongoUrl": "MONGODB_URL"
       },
-        "auth": {
-            "key": "some-key",
-            "tokenExpiresIn": "20000000"
-          },
-        "resources": {
-            "StormGlass": {
-                "apiUrl": "https://api.stormglass.io/v2",
-                "apiToken": "do-not-hard-code"
-            }
+      "resources": {
+        "StormGlass": {
+          "apiUrl": "STORM_GLASS_API_URL",
+          "apiToken": "STORM_GLASS_API_TOKEN",
+          "cacheApiTtl": "STORM_GLASS_API_CACHE_TTL"
         }
+      },
+      "auth": {
+        "key": "JWT_SECRET_KEY"
+      }
     }
-}
+  }
