@@ -1,18 +1,19 @@
 {
     "App": {
-      "port": "PORT",
-      "database": {
-        "mongoUrl": "MONGODB_URL"
-      },
-      "resources": {
-        "StormGlass": {
-          "apiUrl": "STORM_GLASS_API_URL",
-          "apiToken": "STORM_GLASS_API_TOKEN",
-          "cacheApiTtl": "STORM_GLASS_API_CACHE_TTL"
+        "port": 3001,
+        "database": {
+            "mongoUrl": "MONGODB_URL"
+
+        },
+        "auth": {
+            "key": "some-key",
+            "tokenExpiresIn": "20000000"
+          },
+        "resources": {
+            "StormGlass": {
+                "apiUrl": "https://api.stormglass.io/v2",
+                "apiToken": "do-not-hard-code"
+            }
         }
-      },
-      "auth": {
-        "key": "JWT_SECRET_KEY"
-      }
     }
-  }
+}
