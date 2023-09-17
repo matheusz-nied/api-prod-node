@@ -48,8 +48,6 @@ export class StormGlassUnexpectedResponseError extends InternalError {
  */
 export class ClientRequestError extends InternalError {
   constructor(message: string) {
-    console.log("\n\nmessage");
-    console.log(message);
     const internalMessage =
       'Unexpected error when trying to communicate to StormGlass';
     super(`${internalMessage}: ${message}`);
