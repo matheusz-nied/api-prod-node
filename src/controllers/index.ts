@@ -1,5 +1,6 @@
 import logger from '@src/logger';
 import { CUSTOM_VALIDATION } from '@src/models/user';
+import ApiError, { APIError } from '@src/util/errors/api-error';
 import { Response } from 'express';
 import mongoose from 'mongoose';
 
@@ -10,13 +11,15 @@ export abstract class BaseController {
     ): void {
         if (error instanceof mongoose.Error.ValidationError) {
             const clientErros = this.handleClientErrors(error);
-            res.status(clientErros.code).send({
+            res.status(clientErros.code).send(ApiError.format({
                 code: clientErros.code,
-                error: clientErros.error,
-            });
+                message: clientErros.error,
+            }));
         } else {
-            logger.error(error)
-            res.status(500).send({ code: 500, error: 'Something went wrong' });
+            logger.error(error);
+            res.status(500).send(
+                ApiError.format({ code: 500, message: 'Something went wrong' })
+            );
         }
     }
 
@@ -31,5 +34,9 @@ export abstract class BaseController {
             return { code: 409, error: error.message };
         }
         return { code: 422, error: error.message };
+    }
+
+    protected sendErrorResponse(res: Response, apiError: APIError): Response {
+        return res.status(apiError.code).send(ApiError.format(apiError));
     }
 }

@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import { ForecastController } from './controllers/forecast';
 import { Application } from 'express';
 import * as database from '@src/database';
+import cors from 'cors';
 import { BeachesController } from './controllers/beaches';
 import { UsersController } from './controllers/users';
 import logger from './logger';
@@ -20,13 +21,22 @@ export class SetupServer extends Server {
 
     private setupExpress(): void {
         this.app.use(bodyParser.json());
+        this.app.use(
+            cors({
+                origin: '*',
+            })
+        );
     }
 
     private setupControllers(): void {
         const forecastController = new ForecastController();
         const beachesController = new BeachesController();
         const usersController = new UsersController();
-        this.addControllers([forecastController, beachesController, usersController]);
+        this.addControllers([
+            forecastController,
+            beachesController,
+            usersController,
+        ]);
     }
 
     private async databaseSetup(): Promise<void> {
@@ -41,9 +51,9 @@ export class SetupServer extends Server {
         return this.app;
     }
 
-    public start(): void{
-        this.app.listen(this.port, ()=> {
-            logger.info('Server listening of port: '+ this.port);
-        })
+    public start(): void {
+        this.app.listen(this.port, () => {
+            logger.info('Server listening of port: ' + this.port);
+        });
     }
 }

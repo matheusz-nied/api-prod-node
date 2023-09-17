@@ -16,7 +16,7 @@ describe('Users functional tests', () => {
                 .post('/users')
                 .send(newUser);
             expect(response.status).toBe(201);
-          
+
             await expect(
                 AuthService.comparePassword(
                     newUser.password,
@@ -31,7 +31,7 @@ describe('Users functional tests', () => {
             );
         });
 
-        it('should return 400 when there is a validation error', async () => {
+        it('should return 422 when there is a validation error', async () => {
             const newUser = {
                 // name field is missing here
                 email: 'john@mail.com',
@@ -44,7 +44,9 @@ describe('Users functional tests', () => {
             // you can also check for specific error message if your API returns it
             expect(response.body).toEqual({
                 code: 422,
-                error: 'User validation failed: name: Path `name` is required.',
+                error: 'Unprocessable Entity',
+                message:
+                    'User validation failed: name: Path `name` is required.',
             });
         });
 
@@ -62,7 +64,9 @@ describe('Users functional tests', () => {
             // you can also check for specific error message if your API returns it
             expect(response.body).toEqual({
                 code: 409,
-                error: 'User validation failed: email: already exists in the database.',
+                error: 'Conflict',
+                message:
+                    'User validation failed: email: already exists in the database.',
             });
         });
     });
@@ -84,7 +88,7 @@ describe('Users functional tests', () => {
             );
         });
 
-        it('should return UNAUTHORIZED if the user with the givem email is not found', async () => {
+        it('should return UNerrorAUTHORIZED if the user with the givem email is not found', async () => {
             const response = await global.testRequest
                 .post('/users/authenticate')
                 .send({
@@ -98,9 +102,9 @@ describe('Users functional tests', () => {
             const newUser = {
                 name: 'John Doe',
                 email: 'john@mail.com',
-                password: '1234'
-            }
-            await new User(newUser).save()
+                password: '1234',
+            };
+            await new User(newUser).save();
 
             const response = await global.testRequest
                 .post('/users/authenticate')

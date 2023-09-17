@@ -18,22 +18,26 @@ export class UsersController extends BaseController {
     }
 
     @Post('authenticate')
-    public async authenticate(req: Request, res: Response): Promise<Response | void>{
-        const {email, password} = req.body
-        const user = await User.findOne({email})
-        if(!user){
-            return res.status(401).send({
+    public async authenticate(
+        req: Request,
+        res: Response
+    ): Promise<Response | void> {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return this.sendErrorResponse(res, {
                 code: 401,
-                error: 'User not found!'
+                message: 'User not found!',
             });
         }
-        if(!(await AuthService.comparePassword(password, user.password))){
-            return res.status(401).send({
+        if (!(await AuthService.comparePassword(password, user.password))) {
+            return this.sendErrorResponse(res, {
                 code: 401,
-                error: 'Password does not match!'
-            });        }
+                message: 'Password does not match!',
+            });
+        }
 
         const token = AuthService.generateToken(user.toJSON());
-        return res.status(200).send({token: token})
+        return res.status(200).send({ token: token });
     }
 }
