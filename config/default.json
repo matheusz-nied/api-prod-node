@@ -2,7 +2,7 @@
     "App": {
         "port": 3001,
         "database": {
-            "mongoUrl": "MONGODB_URL"
+            "mongoUrl": "mongodb://localhost:27017/surf-forecast"
 
         },
         "auth": {
