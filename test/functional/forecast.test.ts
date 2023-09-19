@@ -1,4 +1,4 @@
-import { Beach, BeachPosition } from '@src/models/beach';
+import { Beach, GeoPosition } from '@src/models/beach';
 import nock from 'nock';
 import stormGlassWeather3HoursFixture from '../fixtures/stormglass_weather_3_hours.json';
 import apiForecastResponse1BeachFixture from '../fixtures/api_forecast_response_1_beach.json';
@@ -20,7 +20,7 @@ describe('Beach forecast functional tests', () => {
             lat: -33.792726,
             lng: 151.289824,
             name: 'Manly',
-            position: BeachPosition.E,
+            position: GeoPosition.E,
             user: user.id,
         };
         await new Beach(defaultBeach).save();
@@ -42,6 +42,7 @@ describe('Beach forecast functional tests', () => {
                 lng: 151.289824,
                 params: /(.*)/,
                 source: 'noaa',
+                end: /(.*)/,
             })
             .reply(200, stormGlassWeather3HoursFixture);
         const { body, status } = await global.testRequest
@@ -52,20 +53,20 @@ describe('Beach forecast functional tests', () => {
     });
     it('should return 500 if something goes wrong during the processing', async () => {
         nock('https://api.stormglass.io:443', {
-          encodedQueryParams: true,
-          reqheaders: {
-            Authorization: (): boolean => true,
-          },
+            encodedQueryParams: true,
+            reqheaders: {
+                Authorization: (): boolean => true,
+            },
         })
-          .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
-          .get('/v1/weather/point')
-          .query({ lat: '-33.792726', lng: '151.289824' })
-          .replyWithError('Something went wrong');
-    
+            .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+            .get('/v1/weather/point')
+            .query({ lat: '-33.792726', lng: '151.289824' })
+            .replyWithError('Something went wrong');
+
         const { status } = await global.testRequest
-          .get(`/forecast`)
-          .set({ 'x-access-token': token });
-    
+            .get(`/forecast`)
+            .set({ 'x-access-token': token });
+
         expect(status).toBe(500);
-      });
+    });
 });

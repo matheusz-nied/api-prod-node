@@ -5,9 +5,14 @@ import { ForecastController } from './controllers/forecast';
 import { Application } from 'express';
 import * as database from '@src/database';
 import cors from 'cors';
+import apiSchema from './api.schema.json';
+import swaggerUi from 'swagger-ui-express';
+import * as OpenApiValidator from 'express-openapi-validator';
+import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 import { BeachesController } from './controllers/beaches';
 import { UsersController } from './controllers/users';
 import logger from './logger';
+import { apiErrorValidator } from './middlewares/api-error-validator';
 export class SetupServer extends Server {
     constructor(private port = 3000) {
         super();
@@ -15,8 +20,10 @@ export class SetupServer extends Server {
 
     public async init(): Promise<void> {
         this.setupExpress();
+        await this.docsSetup();
         this.setupControllers();
         await this.databaseSetup();
+        this.setupErrorHandlers();
     }
 
     private setupExpress(): void {
@@ -26,6 +33,10 @@ export class SetupServer extends Server {
                 origin: '*',
             })
         );
+    }
+
+    private setupErrorHandlers(): void {
+        this.app.use(apiErrorValidator);
     }
 
     private setupControllers(): void {
@@ -45,6 +56,17 @@ export class SetupServer extends Server {
 
     public async close(): Promise<void> {
         await database.close();
+    }
+
+    private async docsSetup(): Promise<void> {
+        this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(apiSchema));
+        this.app.use(
+            OpenApiValidator.middleware({
+                apiSpec: apiSchema as OpenAPIV3.Document,
+                validateRequests: false, //will be implemented in step2
+                validateResponses: false, //will be implemented in step2
+            })
+        );
     }
 
     public getApp(): Application {
